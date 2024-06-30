@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Weather API",
+    "version": "1.0.0",
+    "description": "API for fetching current and forecasted weather data"
+  },
+  "servers": [
+    {
+      "url": "https://4724-202-47-45-125.ngrok-free.app"
+    }
+  ],
+  "paths": {
+    "/webhook": {
+      "post": {
+        "summary": "Fetch weather data",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currentCity": {
+                    "type": "string",
+                    "description": "City name for current weather"
+                  },
+                  "forecastCity": {
+                    "type": "string",
+                    "description": "City name for forecasted weather"
+                  },
+                  "requestType": {
+                    "type": "string",
+                    "enum": ["current", "forecast"],
+                    "description": "Type of request, either 'current' for current weather or 'forecast' for forecasted weather"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Start date for forecast in YYYY-MM-DD format"
+                  }
+                },
+                "required": ["requestType"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "description": "Name of the city"
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "description": "Current temperature in Celsius"
+                    },
+                    "weather": {
+                      "type": "string",
+                      "description": "Current weather description"
+                    },
+                    "humidity": {
+                      "type": "number",
+                      "description": "Current humidity percentage"
+                    },
+                    "wind_speed": {
+                      "type": "number",
+                      "description": "Current wind speed in meters per second"
+                    },
+                    "forecasts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "description": "Date of forecast"
+                          },
+                          "temperature": {
+                            "type": "object",
+                            "properties": {
+                              "day": {
+                                "type": "number",
+                                "description": "Day temperature in Celsius"
+                              },
+                              "min": {
+                                "type": "number",
+                                "description": "Minimum temperature in Celsius"
+                              },
+                              "max": {
+                                "type": "number",
+                                "description": "Maximum temperature in Celsius"
+                              }
+                            }
+                          },
+                          "weather": {
+                            "type": "string",
+                            "description": "Weather description"
+                          },
+                          "humidity": {
+                            "type": "number",
+                            "description": "Humidity percentage"
+                          },
+                          "wind_speed": {
+                            "type": "number",
+                            "description": "Wind speed in meters per second"
+                          }
+                        },
+                        "required": ["date", "temperature", "weather", "humidity", "wind_speed"]
+                      }
+                    }
+                  },
+                  "required": ["city", "temperature", "weather", "humidity", "wind_speed"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Invalid request type"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Error fetching weather data"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
